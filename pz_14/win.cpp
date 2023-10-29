@@ -1,4 +1,6 @@
-#include <windows.h>
+#include <windows.h> //пз 14, 15
+
+HWND hwnd;
 
 // Прототип обработчика окна
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -29,10 +31,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // Создание главного окна
-    HWND hwnd = CreateWindowEx(
+    hwnd = CreateWindowEx(
         0,
         L"MyWin32Class",
-        L"Мое классическое приложение Win32",
+        L"Классическое приложение Win32",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
         NULL,
@@ -62,17 +64,40 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return (int)msg.wParam;
 }
 
+HDC hDC; // Контекст устройства
+PAINTSTRUCT ps;
+RECT rect;
+bool a = true;
+
 // Обработчик окна
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    WCHAR buffer[] = L"Пять стихий";
+    WCHAR buffer2[] = L"Заметка";
+
     switch (uMsg)
     {
     case WM_CLOSE:
         DestroyWindow(hwnd);
         break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
+    case WM_ACTIVATE:
+        if (a)
+        {
+            a = false;
+            MessageBox(
+                hwnd, // Родительское окно. Или NULL, если его нет.
+                buffer, // Выводимое сообщение.
+                buffer2, // Текст заголовка окна.
+                MB_ICONINFORMATION); // Настройки кнопок и значка окна сообщения.
+        }
         break;
+    case WM_PAINT:
+        hDC = BeginPaint(hwnd, &ps);
+        GetClientRect(hwnd, &rect);
+        DrawText(hDC, TEXT("Стихии природы: энергия, вода, огонь, земля, воздух!"), -1, &rect, DT_SINGLELINE |
+            DT_CENTER | DT_VCENTER);
+        EndPaint(hwnd, &ps);
+        return 0;
     default:
         return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
