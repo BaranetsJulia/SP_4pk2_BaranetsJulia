@@ -11,13 +11,14 @@
         <SplitView x:Name="MySplitView" DisplayMode="Inline">
             <SplitView.Pane>
                 <StackPanel Orientation="Vertical">
-                    <Rectangle Fill="LawnGreen" Width="100" Height="Auto"/>
-                    <Rectangle Fill="Red" Width="100" Height="Auto"/>
-                    <Rectangle Fill="LightBlue" Width="100" Height="Auto"/>
-                    <Rectangle Fill="HotPink" Width="100" Height="Auto"/>
-                    <Rectangle Fill="Yellow" Width="100" Height="Auto"/>
+                    <Rectangle Width="100" Height="50" Fill="LawnGreen" />
+                    <Rectangle Width="100" Height="50" Fill="Red" />
+                    <Rectangle Width="100" Height="50" Fill="LightBlue" />
+                    <Rectangle Width="100" Height="50" Fill="HotPink" />
+                    <Rectangle Width="100" Height="50" Fill="Yellow" />
                 </StackPanel>
             </SplitView.Pane>
+
             <SplitView.Content>
                 <Grid>
                     <Grid.RowDefinitions>
