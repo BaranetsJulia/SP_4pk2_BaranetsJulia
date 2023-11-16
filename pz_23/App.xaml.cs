@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace pz_23
+namespace pz_23 //pz_25 
 {
     /// <summary>
     /// Обеспечивает зависящее от конкретного приложения поведение, дополняющее класс Application по умолчанию.
@@ -30,6 +30,7 @@ namespace pz_23
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.Resuming += OnResuming;
         }
 
         /// <summary>
@@ -70,6 +71,9 @@ namespace pz_23
                 }
                 // Обеспечение активности текущего окна
                 Window.Current.Activate();
+
+                string message = "Приложение запущено";
+                ShowMessage(message);
             }
         }
 
@@ -93,8 +97,33 @@ namespace pz_23
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            string message = "Приложение остановлено";
+            ShowMessage(message);
             //TODO: Сохранить состояние приложения и остановить все фоновые операции
             deferral.Complete();
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            // Вывод сообщения
+            string message = "Приложение активировано";
+            ShowMessage(message);
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            {
+                string message = "Приложение повторно запущено";
+                ShowMessage(message);
+            }
+            base.OnActivated(args);
+        }
+
+        private async void ShowMessage(string message)
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(message);
+            await dialog.ShowAsync();
         }
     }
 }
