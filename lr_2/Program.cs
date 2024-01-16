@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace lr_2
 {
     class Program
     {
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint GetModuleFileName(IntPtr hModule, System.Text.StringBuilder lpFilename, uint nSize);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr LoadLibrary(string lpFileName);
+
         [DllImport("kernel32.dll")]
         public static extern int GetCurrentProcessId();
 
@@ -26,6 +33,18 @@ namespace lr_2
 
         static void Main(string[] args)
         {
+            IntPtr hModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.BaseAddress;
+            StringBuilder filename = new StringBuilder(1024);
+            GetModuleFileName(hModule, filename, (uint)filename.Capacity);
+            string moduleName = filename.ToString();
+            Console.WriteLine("Имя модуля: " + moduleName);
+
+            hModule = LoadLibrary("kernel32.dll"); 
+            filename = new StringBuilder(1024);
+            GetModuleFileName(hModule, filename, (uint)filename.Capacity);
+            string moduleNameForLibrary = filename.ToString();
+            Console.WriteLine("Имя модуля для kernel32: " + moduleNameForLibrary);
+
             int processId = GetCurrentProcessId();
             Console.WriteLine("Идентификатор текущего процесса: " + processId);
 
